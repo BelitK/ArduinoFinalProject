@@ -1,0 +1,85 @@
+#include <Servo.h> //servo kütüphanesini ekler
+Servo parmak1, parmak2, parmak3, parmak4, donenbas; //servoların tanımlanması
+int servoPin1 = 5;
+int servoPin2 = 6;
+int servoPin3 = 9;
+int servoPin4 = 10;
+int servoPin5 = 11;
+// Servo pinlerinin tanımlanması
+int flexPin1 = A0;
+int flexPin2 = A1;
+int flexPin3 = A2;
+int flexPin4 = A3;
+int flexPin5 = A4;
+// flex direncinin analog tanımlanması
+int basincPin = A5;
+int basincOku;
+int guc;
+//basınç sensörünün tanımlanması
+void sifir(){
+if (guc > 90){
+parmak1.write(0);
+parmak2.write(0);
+parmak3.write(0);
+parmak4.write(0);
+delay(250);
+}
+else {
+delay(250);
+}
+}
+//basınç gücünün eşik değeri geçmesi sonucu servo pozisyonlarını sıfırlar yoksa 0.25 saniye
+bekleme koyar.
+void setup()
+{
+// servoların parmaklara bağlanması
+parmak1.attach(servoPin1);
+parmak2.attach(servoPin2);
+parmak3.attach(servoPin3);
+parmak4.attach(servoPin4);
+donenbas.attach(servoPin5);
+//Servo pinlerini çıktı olarak ayarlandı
+pinMode(servoPin1, OUTPUT);pinMode(servoPin2, OUTPUT);
+pinMode(servoPin3, OUTPUT);
+pinMode(servoPin4, OUTPUT);
+pinMode(servoPin5, OUTPUT);
+//Flex sensörleri girdi olarak ayarlandı
+pinMode(flexPin1, INPUT);
+pinMode(flexPin2, INPUT);
+pinMode(flexPin3, INPUT);
+pinMode(flexPin4, INPUT);
+pinMode(flexPin5, INPUT);
+}
+void loop()
+{
+//Analog girişler belirtildi
+int flex1 = analogRead(flexPin1);
+int flex2 = analogRead(flexPin2);
+int flex3 = analogRead(flexPin3);
+int flex4 = analogRead(flexPin4);
+int flex5 = analogRead(flexPin5);
+int gucoku = analogRead(basincPin);
+// pozisyon değerlerinin belirlenen değerler arasının servo motor çıktısı arasına eşitlenmesi
+/* map fonksiyonu kullanılarak aralıklar eşitlendi ve constrain fonksiyonu ile kesin
+aralıklar belirlendi*/
+int pos1 = map(flex1, 400, 700, 0, 180);
+pos1 = constrain(pos1, 0, 180);
+int pos2 = map(flex2, 400, 700, 0, 180);
+pos2 = constrain(pos2, 0, 180);
+int pos3 = map(flex3, 400, 700, 0, 180);
+pos3 = constrain(pos3, 0, 180);
+int pos4 = map(flex4, 480, 640, 0, 180);
+pos4 = constrain(pos4, 0, 180);
+int pos5 = map(flex5, 400, 700, 0, 90);
+pos5 = constrain(pos5, 0, 90);
+// güc değerinin analog değerden yüzdelik değere
+int guc = map (gucoku,0,1023,0,100);
+guc = constrain(guc,0,100);
+//Flex değerleri kadar servoların hareket etmesi
+parmak1.write(pos1);
+parmak2.write(pos2);
+parmak3.write(pos3);
+parmak4.write(pos4);
+donenbas.write(pos5);
+sifir(); // her hareket eylemi sonrası güç kontrolü yaparak ya pozisyonları sıfırlar ya da bekletir.
+}
